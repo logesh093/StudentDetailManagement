@@ -1,0 +1,270 @@
+﻿@model StudentData.Core.Model.Studentmodel
+
+@{
+    List<string> strList = new List<string>(new string[] { "Science", "Arts", "Commerce" });
+    int studentId = (Model != null && Model.StudentId > 0 ? Model.StudentId : 0);
+}
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+</head>
+<style>
+    .my-textbox
+    {
+        margin: 10px;
+        margin-right: 0px;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    #my-textbox {
+        margin: 20px;
+        margin-right: 0px;
+        padding: 10px;
+        border-radius: 10px;
+        width:50%;
+    }
+    .my-textbox:focus 
+    {
+        background-color: rgb(237, 250, 246);
+    }
+
+    body 
+    {
+        background-color: white;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+
+    .form 
+    {
+        background-color: aliceblue;
+        width: 41%;
+        height: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 3%;
+        border-radius: 20px;
+        padding: 50px;
+    }
+
+    .align
+    {
+        margin-left: 30px;
+    }
+
+    .error {
+        color: red;
+    }
+</style>
+
+
+<body>
+
+
+    <div class="form">
+        <div>
+            @if (studentId > 0)
+            {
+                <h3 style="text-align :center;color:orangered;font-weight:700;">Update Student Detail</h3>
+            }
+            else
+            {
+                <h3 style="text-align :center;color:green;font-weight:700;">Create New Student Detail</h3>
+            }
+
+            @using (Html.BeginForm("SaveandUpdateStudentDetails", "Student", FormMethod.Post, new { id = "formvalidation" }))
+            {
+                @Html.HiddenFor(m=>m.StudentId)
+                <table style="width:100%;">
+                    <tr>
+                        <td>@Html.Label("Name ")<i style="color:red;">*</i></td>
+                        <td style="margin-left:5px;" class="colon">@Html.Label(":")</td>
+                        <td>
+                            @Html.TextBoxFor(m=>m.StudentName, null, new {@class = "my-textbox",  @placeholder="Name" ,@id="StudentName"})<br />
+
+                        </td>
+
+                    <tr>
+                        <td>@Html.Label("DOB ")<i style="color:red;">*</i></td>
+                        <td>@Html.Label(":")</td>
+                        <td>
+                                @Html.TextBoxFor(m => m.StudentDOB, null, new { @class = "my-textbox", @type = "date", id = "StudentDOB" ,@placeholder="DOB"})<br />
+
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.Label("Gender")</td>
+                        <td>@Html.Label(":")</td>
+                        <td>
+                                @Html.RadioButtonFor(m => m.StudentGender, "Male", new { id = "male", @class = "my-textbox" })
+
+                                @Html.Label("Male ")
+                                @Html.RadioButtonFor(m => m.StudentGender, "Female", new { id = "male", @class = "my-textbox" })
+
+                                @Html.Label("Female ")
+                                @Html.RadioButtonFor(m => m.StudentGender, "Other", new { id = "male", @class = "my-textbox" })
+
+                                @Html.Label("Other ")<br />
+
+                        </td>
+                    </tr>
+                    <tr>
+                        
+                        <td style=" width:100px;">@Html.Label("Address ")<i style="color:red;">*</i></td>
+                        <td>@Html.Label(":")</td>
+                        
+                        
+                        <td>
+                                @Html.TextAreaFor(m=>m.StudentAddress, new { @class = "my-textbox",@id="StudentAddress" ,@placeholder="Address..."})<br />
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.Label("Contact")<i style="color:red;">*</i></td>
+                        <td>@Html.Label(":")</td>
+                        <td>
+                                @Html.TextBoxFor(m=>m.StudentContactNumber, null, new { @placeholder="Contact" , @class = "my-textbox",@id="StudentContactNumber",@type="number",@minlength=10})<br />
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.Label("EmailID ")<i style="color:red;">*</i></td>
+                        <td>@Html.Label(":")</td>
+                        <td>
+                                @Html.TextBoxFor(m=>m.StudentEmail, null, new { @class = "my-textbox", @placeholder="EmailID" ,id="StudentEmail"})<br />
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.Label("Course")<i style="color:red;">*</i></td>
+                        <td>@Html.Label(":")</td>
+                        
+                        <td>
+                                @if (studentId>0)
+                                {
+                                    @Html.DropDownListFor(m => m.StudentCourse, new SelectList(strList, strList.FirstOrDefault()),new {@class="my-textbox" , id ="StudentCourse",placeholder= "--Select Course----"})
+
+                                    <br />
+                                }
+                                else
+                                {
+                                    @Html.DropDownListFor(m => m.StudentCourse, new SelectList(strList, strList.FirstOrDefault()), new { @class = "form-control select-add-placeholder",@id ="my-textbox"})
+                                }
+                                
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.Label("Subjects ")</td>
+                        <td>@Html.Label(":")</td>
+                        <td>
+                            <br>@Html.CheckBoxFor(m => m.IsMathmatics,new{@class="align"})
+                                @Html.Label("Mathmathics")<br>
+                                @Html.CheckBoxFor(m => m.IsEnglish,new{@class="align"})
+                                @Html.Label("English")<br>
+                                @Html.CheckBoxFor(m => m.IsPhysics,new{@class="align"})
+                                @Html.Label("Physics")<br />
+                                @Html.CheckBoxFor(m => m.IsChemistry,new{@class="align"})
+                                @Html.Label("Chemistry")<br />
+                                @Html.CheckBoxFor(m => m.IsBiology,new{@class="align"})
+                                @Html.Label("Biology")<br />
+
+                        </td>
+
+                    </tr>
+                </table>
+
+                @if (studentId > 0)
+                {
+
+                    <button type="submit" class="my-textbox" style="margin-top:40px;margin-left:100px;font-weight:700;background-color:orangered;border-radius:10px;width:50%;color:white;text-align :center;">Update</button><br>
+
+                }
+                else
+                {
+                    <button type="submit" class="my-textbox" style="margin-top:40px;margin-left:100px;font-weight:700;background-color:green;border-radius:10px;width:50%;color:white;text-align :center;">Save</button><br>
+
+
+                }
+                <a href="#" data-toggle="tooltip" onclick="Back()" style="margin-left:180px;">Back</a>
+            }
+
+
+        </div>
+    </div>
+</body>
+
+<script>
+    $(".select-add-placeholder").prepend("<option value='' disabled selected>--Select Course---</option>");
+    function Back() 
+    {
+        location.href = "/Student/StudentDashBoard/";
+    }
+    $.validator.addMethod("dob18", function (value) {
+        var dob = new Date(value);
+        var currentDate = new Date();
+        var age = currentDate.getFullYear() - dob.getFullYear();
+        return age >= 18;
+    });
+
+    $("#formvalidation").validate({
+        rules: 
+        {
+            StudentName: {
+                required: true,
+                maxlength: 20,
+            },
+            StudentAddress: {
+                required: true,
+                maxlength: 100,
+            },
+            StudentContactNumber: {
+                required: true,
+                maxlength: 10,
+                digits: true,
+            },
+            StudentEmail: {
+                required: true,
+                email: true,
+            },
+            StudentCourse: {
+                required: true,
+            },
+            StudentDOB: {
+                required: true,
+                dob18: true, 
+            }
+        },
+        messages: {
+            StudentName: {
+                required: "Name field is required",
+                maxlength: "Please enter a maximum of 20 characters",
+            },
+            StudentAddress: {
+                required: "Address field is required",
+                maxlength: "Address must be less than 100 characters",
+            },
+            StudentContactNumber: {
+                required: "Contact field is required",
+                maxlength: "Please enter a valid contact number",
+                digits: "Please enter only digits"
+            },
+            StudentEmail: {
+                required: "Email field is required",
+                email: "Please enter a valid email",
+            },
+            StudentCourse: {
+                required: "Course field is required",
+            },
+            StudentDOB: {
+                required: "DOB field is required",
+                dob18: "Age must be 18 years or older",
+            }
+        }
+    });
+
+</script>
+
+
+

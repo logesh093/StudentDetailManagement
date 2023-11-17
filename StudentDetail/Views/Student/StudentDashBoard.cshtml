@@ -1,0 +1,195 @@
+﻿@model IEnumerable<StudentData.Core.Model.Studentmodel>
+@{
+    int i = 0;
+    string message = TempData["Message"] != null ? TempData["Message"].ToString() : string.Empty;
+   
+}
+<head>
+    <link rel="stylesheet" href="//cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    @if (!string.IsNullOrEmpty(message))
+     {
+       <div class="alert alert-success" style="width:300px;margin-left:70%;">@message</div>
+     }
+    <div style="display:inline;">
+     <span><h3>Student Record Table</h3></span>
+        <button style="font-size:14px;margin-left:90%;border-radius:5px;" class="btn btn-danger" onclick="LogoutDashboard()" >Logout <i class="fa fa-sign-out" style="font-size:14px;color:white"></i></button>
+  
+        <button type="submit" class="btn btn-success" onclick="FnCreateStudent()" style="color:white;margin:20px;margin-left:0%;">Add Student </button>
+    </div>
+    
+    <table id="example" class="table table-striped" style="width:100%;">
+        <thead >
+            <tr >
+                <th>SNo</th>
+                <th>Name</th>
+                <th>DOB</th>
+                <th>Gender</th>
+                <th>Contact number</th>
+                <th>Email ID</th>
+                <th style="text-align:center;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @foreach (var item in Model)
+            {
+
+                i++;
+                <tr>
+                    <td>@i</td>
+                    <td>@item.StudentName</td>
+                    <td>@item.StudentDOB</td>
+                    <td>@item.StudentGender</td>
+                    <td>@item.StudentContactNumber</td>
+                    <td>@item.StudentEmail</td>
+                    <td style="text-align:center;">
+                       @*  <button type="button" class="btn btn-secondary" onclick="View(@item.StudentId)">View</button> *@
+                        <i class="fas fa-eye" onclick="View(@item.StudentId)" style="margin:5px;"></i>
+                       @*  <button type="button" class="btn btn-success" onclick="Edit(@item.StudentId)">Edit<i class="fas fa-pencil-alt"></i></button> *@
+                        <i class="fas fa-pencil-alt" onclick="Edit(@item.StudentId)" style="margin:5px;"></i>
+                        @* <button type="button" class="btn btn-danger" onclick="Delete(@item.StudentId)">Delete<i class="fas fa-trash"></i></button> *@
+                        <i class="fas fa-trash" onclick="Delete(@item.StudentId)" style="margin:5px;"></i>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="modal fade" id="partialModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Student Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" style="text-align:left">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    new DataTable('#example');
+    function FnCreateStudent() {
+        location.href = "/Student/SaveandUpdateStudentDetails/";
+    }
+    $(document).ready(function () {
+        hideAlert();
+        $('#example').DataTable();
+        
+    });
+    function Delete(id) {
+        // if (confirm("do you want Delete this fields")) {
+        //     location.href = "/Student/Delete/" + id;
+        // }
+        Swal.fire({
+            title: 'Are you sure want to delete?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085D6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                location.href = "/Student/Delete/?studentId=" + id;
+                Swal.fire(
+                    'Deleted!',
+                    'Your file has been deleted.',
+                    'success'
+                )
+            }
+        })
+    }
+    function Edit(id) {
+        if (id > 0) {
+           top.location.href = "/Student/SaveandUpdateStudentDetails/?studentId=" + id;
+        }
+    }
+    function LogoutDashboard()
+    {
+        // if (confirm("Are you Sure Want To Logout?"))
+        // {
+        //     location.href = "/Student/StudentLogIn/";
+        // }
+        Swal.fire({
+            title: 'Are you sure want to logout?',
+            text: "You are logout from this page",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085D6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, logout!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                location.href = "/Student/StudentLogIn/";
+                Swal.fire(
+                    'logout!',
+                    'success'
+                )
+            }
+        })
+    }
+    function hideAlert() {
+        setTimeout(function () {
+            $(".alert").fadeOut("slow");
+        }, 4000);
+    }
+
+    function View(Id) {
+        $.ajax({
+            type: "GET",
+            url: "/Student/_Partialview/",
+            data: {
+                id: Id
+            },
+            cache: true,
+            success: function (data) {
+                $("#partialModal").find(".modal-body").html(data);
+                $("#partialModal").modal('show');
+
+
+            }
+        });
+
+    }
+    function preventBack() { window.history.forward(); }
+    setTimeout("preventBack()", 0);
+    window.onunload = function () { null };
+</script>
+<style>
+    .logoutLblPos {
+        position: fixed;
+        right: 50px;
+        top: 20px;
+    }
+
+    .dataTables_wrapper .dataTables_length, .dataTables_wrapper .dataTables_filter, .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_processing, .dataTables_wrapper .dataTables_paginate {
+        color: green;
+        margin: 10px
+    }
+
+    tbody, td, tfoot,th, thead, tr
+    {
+        border-color:black;
+    }
+
+    thead {
+        background-color: lightcyan;
+    }
+    tbody{
+        background-color: white;
+    }
+</style>

@@ -1,0 +1,201 @@
+﻿@model StudentData.Core.Model.UserDetail
+
+
+
+<head>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.3/jquery.validate.min.js"></script>
+</head>
+<style>
+    .my-textbox {
+        margin: 20px;
+        margin-right: 0px;
+        padding: 10px;
+        border-radius: 10px;
+    }
+
+    #my-textbox {
+        margin: 20px;
+        margin-right: 0px;
+        padding: 10px;
+        border-radius: 10px;
+        width: 90%;
+    }
+
+    .my-textbox:focus {
+        background-color: rgb(237, 250, 246);
+    }
+
+    body {
+        background-color: white;
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+
+    .form {
+        background-color: aliceblue;
+        width: 45%;
+        height: 50%;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 3%;
+        border-radius: 20px;
+        padding: 50px;
+    }
+
+    .align {
+        margin-left: 30px;
+    }
+
+    .error {
+        color: red;
+    }
+</style>
+
+
+<body>
+
+
+    <div class="form">
+        <div>
+            @if (ViewBag.Message != null)
+            {
+                <div class="alert alert-danger">@ViewBag.Message</div>
+            }
+           <h3 style="text-align :center;color:green;font-weight:700;">SIGNUP FORM</h3>
+            @using (Html.BeginForm("AddSignUPDetails", "Student", FormMethod.Post, new { id = "formvalidation" }))
+            {
+                @Html.HiddenFor(m=>m.UserId)
+                <table>
+                    <tr>
+                        <td>@Html.Label("Name ")<i style="color:red;">*</i></td>
+                        <td style="margin-left:5px;" class="colon">@Html.Label(":")</td>
+                        <td>
+                            @Html.TextBoxFor(m=>m.UserName, null, new {@class = "my-textbox",  @placeholder="Name" ,@id="UserName"})<br />
+
+                        </td>
+                    </tr>
+                    
+                    
+                    <tr>
+                        <td>@Html.Label("Contact")<i style="color:red;">*</i></td>
+                        <td>@Html.Label(":")</td>
+                        <td>
+                            @Html.TextBoxFor(m=>m.Phonenumber, null, new { @placeholder="Contact" , @class = "my-textbox",@id="Phonenumber",@type="number",@minlength=10})<br />
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>@Html.Label("Email ID ")<i style="color:red;">*</i></td>
+                        <td>@Html.Label(":")</td>
+                        <td>
+                            @Html.TextBoxFor(m=>m.UserEmailid, null, new { @class = "my-textbox", @placeholder="Email ID" ,id="UserEmailid"})<br />
+
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>@Html.Label("Password ")<i style="color:red;">*</i></td>
+                        <td>@Html.Label(":")</td>
+                        <td>
+                            @Html.PasswordFor(a=>a.Password,new{@type="password",@class="my-textbox",@value="",@minlength=8,@placeholder="Password"})
+                        </td>
+
+                    </tr>
+                    <tr>
+                        <td style=" width:170px;">@Html.Label("ConfirmPassword")<i style="color:red;">*</i></td>
+
+                        <td>@Html.Label("  :")</td>
+                        <td>
+                            @Html.PasswordFor(a=>a.ConfirmPassword,new{@type="password",@class="my-textbox",@value="",@placeholder="ConfirmPassword"})<br>
+                            <input type="checkbox" onclick="ShowPass()" style="padding:10px" class="my-textbox"> Show Password<br>
+                        </td>
+                    </tr>
+                    
+                </table>
+                
+
+                <br>
+                <button type="submit" class="my-textbox" style="margin-top:40px;margin-left:100px;font-weight:700;background-color:green;border-radius:10px;width:50%;color:white;text-align :center;">SignUp</button>
+
+                <br>
+                <div>
+                    <p style="margin-left: 90px; display: inline;">Already Have an Account?<a href="#" data-toggle="tooltip" onclick="Back()">LogIn Here</a></p>
+                    
+                </div>
+            }
+            
+
+        </div>
+    </div>
+</body>
+
+<script>
+    function Back() {
+        location.href = "/Student/StudentLogIn/";
+    }
+
+    function ShowPass()
+    {
+        var x = document.getElementById("Password");
+        var y = document.getElementById("ConfirmPassword");
+        if (x.type === "password" && y.type === "password") {
+            x.type = "text";
+            y.type = "text";
+        } else {
+            x.type = "password";
+            y.type = "password";
+        }
+    }
+    
+    $("#formvalidation").validate({
+        rules: {
+            UserName: {
+                required: true,
+                minlength: 3,
+                maxlength: 20,
+            },
+            Phonenumber: {
+                required: true,
+                minlength: 10,
+                maxlength: 10,
+                digits: true,
+            },
+            UserEmailid: {
+                required: true,
+                email: true,
+            },
+            Password: {
+                required: true,
+            },
+            ConfirmPassword: {
+                required: true,
+                equalTo: "#Password",
+            }
+        },
+        messages: {
+            UserName: {
+                required: "Name field is required",
+                minlength: "Name should be a minimum of 3 characters",
+                maxlength: "Name should be a maximum of 20 characters",
+            },
+            Phonenumber: {
+                required: "Contact field is required",
+                minlength: "Please enter a valid contact number",
+                digits: "Please enter only digits",
+            },
+           UserEmailid: {
+                required: "Email field is required",
+                email: "Please enter a valid email",
+            },
+            Password: {
+                required: "Password field is required",
+            },
+            ConfirmPassword: {
+                required: "Confirm password field is required",
+                equalTo: "Confirmpassword mismatch",
+            }
+        }
+    });
+</script>
+    
+

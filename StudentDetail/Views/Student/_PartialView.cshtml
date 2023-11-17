@@ -1,0 +1,88 @@
+﻿@model StudentData.Core.Model.Studentmodel
+
+<table class="table table-striped table-hover table-bordered">
+    
+    <tr>
+        <th>Name</th>
+
+        <td>
+            @Model.StudentName
+        </td>
+    </tr>
+
+    <tr>
+        <th>Date-of-Birth</th>
+
+        @{
+            string[] dob = Model.StudentDOB.Split("-");
+        }
+        <td>
+            @dob[2]-@dob[1]-@dob[0]
+        </td>
+
+
+    </tr>
+    <tr>
+        <th>Gender </th>
+        <td>
+            @Model.StudentGender
+        </td>
+    </tr>
+    <tr>
+        <th>Course Enrolled </th>
+        <td>
+            @Model.StudentCourse
+        </td>
+    </tr>
+
+    <tr>
+        <th>PhoneNumber</th>
+        <td>
+            @Model.StudentContactNumber
+        </td>
+    </tr>
+    <tr>
+        <th>Email Id </th>
+        <td>
+            @Model.StudentEmail
+        </td>
+    </tr>
+    <tr>
+        <th>Subjects </th>
+        <td>
+
+            <ul>
+                @if (Model.IsPhysics)
+                {
+                    <li>
+                        Physics &nbsp;
+                    </li>
+                }
+                @if (Model.IsBiology)
+                {
+                    <li>Biology &nbsp;</li>
+                }
+                @if (Model.IsEnglish)
+                {
+                    <li> English &nbsp; </li>
+                }
+                @if (Model.IsChemistry)
+                {
+                    <li> Chemistry &nbsp </li>
+                }
+                @if (Model.IsMathmatics)
+                {
+                    <li> Mathmatics </li>
+                }
+            </ul>
+        </td>
+
+    </tr>
+</table>
+
+
+
+
+
+
+
